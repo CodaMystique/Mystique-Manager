@@ -1,12 +1,13 @@
 import { useRef } from "react";
 import Input from "../Helper/Input.jsx";
-import Modal from "../Helper/Modal.jsx";
 import useProjects from "../../hooks/useProjects.js";
+import toast from "react-hot-toast";
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import isValidDate from "../../utils/isValidDueDate.js";
 
 export default function NewProject() {
   const { handleAddProject, handleCancelAddProject } = useProjects();
 
-  const modal = useRef();
   const title = useRef();
   const description = useRef();
   const dueDate = useRef();
@@ -21,30 +22,44 @@ export default function NewProject() {
       enteredDescription.trim() === "" ||
       enteredDueDate.trim() === ""
     ) {
-      modal.current.open();
+      toast.error("Fill all fields", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+        icon: <AiOutlineCloseCircle />,
+      });
       return;
     }
 
-    console.log(enteredDueDate);
+    if (!isValidDate(enteredDueDate)) {
+      toast.error("Due date must be in current or future date", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+        icon: <AiOutlineCloseCircle />,
+      });
+      return;
+    }
 
     handleAddProject({
       title: enteredTitle,
       description: enteredDescription,
       dueDate: enteredDueDate,
     });
+    toast.success("Project added successfully", {
+      borderRadius: "10px",
+      background: "#333",
+      color: "#fff",
+      // icon: <AiOutlineCheckCircle />,
+    });
   }
 
   return (
     <>
-      <Modal ref={modal} buttonCaption="Ok!">
-        <h2 className="text-xl font-bold text-stone-700 my-4">Invalid Input</h2>
-        <p className="text-stone-600 mb-4">
-          Oops ... looks like you forgot to enter a value.
-        </p>
-        <p className="text-stone-600 mb-4">
-          Please make sure you provide a valid value for every input filed.
-        </p>
-      </Modal>
       <div className="w-[35rem] mt-16">
         <menu className="flex items-center justify-end gap-4 my-4">
           <li>

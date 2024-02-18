@@ -52,8 +52,10 @@ export default function useProjects() {
         method: "DELETE",
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete task");
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error);
       }
 
       setProjectsState((prevState) => {
@@ -136,8 +138,10 @@ export default function useProjects() {
         method: "DELETE",
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete project");
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error);
       }
 
       setProjectsState((prevState) => {
@@ -157,6 +161,11 @@ export default function useProjects() {
     try {
       const res = await fetch("/api/projects");
       const data = await res.json();
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
       setProjectsState((prevState) => {
         return {
           ...prevState,

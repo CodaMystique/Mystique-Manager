@@ -17,7 +17,7 @@ function Home() {
   }
 
   return (
-    <main className="h-screen my-8 flex gap-8">
+    <main className="h-screen flex gap-8">
       <Sidebar></Sidebar>
       {content}
     </main>
