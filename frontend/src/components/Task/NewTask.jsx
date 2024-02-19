@@ -1,13 +1,14 @@
-import { useRef } from "react";
 import { useState } from "react";
+import { BiLoaderCircle } from "react-icons/bi";
+import toast from "react-hot-toast";
 import useProjects from "../../hooks/useProjects.js";
-import Modal from "../Helper/Modal.jsx";
+import useAddTask from "../../hooks/useAddTask.js";
 
 export default function NewTask() {
-  const { handleAddTask, selectedProjectId } = useProjects();
+  const { selectedProjectId } = useProjects();
+  const { isLoading, addTask } = useAddTask();
 
   const [enteredTask, setEnteredTask] = useState("");
-  const modal = useRef();
 
   function handleChange(event) {
     setEnteredTask(event.target.value);
@@ -15,24 +16,15 @@ export default function NewTask() {
 
   function handleClick() {
     if (enteredTask.trim() === "") {
-      modal.current.open();
+      toast.error("Task cannot be empty");
       return;
     }
-    handleAddTask(selectedProjectId, enteredTask);
+    addTask(selectedProjectId, enteredTask);
     setEnteredTask("");
   }
 
   return (
     <>
-      <Modal ref={modal} buttonCaption="Ok!">
-        <h2 className="text-xl font-bold text-stone-700 my-4">Invalid Input</h2>
-        <p className="text-stone-600 mb-4">
-          Oops ... looks like you forgot to enter a value.
-        </p>
-        <p className="text-stone-600 mb-4">
-          Please make sure you provide a valid value for every input filed.
-        </p>
-      </Modal>{" "}
       <div className="flex items-center gap-4">
         <input
           type="text"
@@ -42,9 +34,16 @@ export default function NewTask() {
         />
         <button
           onClick={handleClick}
-          className="text-stone-700 hover:text-stone-950"
+          className="text-stone-700 hover:text-stone-950 flex justify-center items-center"
+          disabled={isLoading}
         >
-          Add Task
+          {isLoading ? (
+            <>
+              <BiLoaderCircle className="animate-spin mr-2" /> Adding Task...
+            </>
+          ) : (
+            "Add Task"
+          )}
         </button>
       </div>
     </>

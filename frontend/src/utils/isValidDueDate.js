@@ -1,4 +1,4 @@
-export default function isValidDate(inputDate) {
+export default function isValidDueDate(inputDate) {
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
   const parsedInputDate = new Date(inputDate);

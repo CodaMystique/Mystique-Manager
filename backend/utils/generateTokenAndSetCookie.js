@@ -9,15 +9,18 @@ import jwt from "jsonwebtoken";
 const generateTokenAndSetCookie = (userId, res) => {
   // Generate JWT token
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "15d", // Token expires in 15 days
   });
+
+  // Calculate milliseconds for 15 days
+  const fifteenDaysInMilliseconds = 15 * 24 * 60 * 60 * 1000;
 
   // Set JWT token as a cookie in the response
   res.cookie("jwt", token, {
-    maxAge: 60 * 1000 * 1000, // 1 hour expiration
+    maxAge: fifteenDaysInMilliseconds,
     httpOnly: true,
     sameSite: "strict",
-    secure: process.env.NODE_ENV !== "development", // Secure flag based on environment
+    // secure: process.env.NODE_ENV !== "development", // Secure flag based on environment
   });
 };
 

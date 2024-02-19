@@ -1,12 +1,14 @@
 import { useRef } from "react";
-import Input from "../Helper/Input.jsx";
-import useProjects from "../../hooks/useProjects.js";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
-import isValidDate from "../../utils/isValidDueDate.js";
+import { BiLoaderCircle } from "react-icons/bi";
+import Input from "../Helper/Input.jsx";
+import useAddProject from "../../hooks/useAddProject.js";
+import isValidDueDate from "../../utils/isValidDueDate.js";
 
 export default function NewProject() {
-  const { handleAddProject, handleCancelAddProject } = useProjects();
+  const { isLoading, addProject } = useAddProject();
+  const navigate = useNavigate();
 
   const title = useRef();
   const description = useRef();
@@ -22,39 +24,21 @@ export default function NewProject() {
       enteredDescription.trim() === "" ||
       enteredDueDate.trim() === ""
     ) {
-      toast.error("Fill all fields", {
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-        icon: <AiOutlineCloseCircle />,
-      });
+      toast.error("Please fill all fields");
       return;
     }
 
-    if (!isValidDate(enteredDueDate)) {
-      toast.error("Due date must be in current or future date", {
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-        icon: <AiOutlineCloseCircle />,
-      });
+    if (!isValidDueDate(enteredDueDate)) {
+      toast.error("Due date must be current or future date");
       return;
     }
 
-    handleAddProject({
+    addProject({
       title: enteredTitle,
       description: enteredDescription,
       dueDate: enteredDueDate,
-    });
-    toast.success("Project added successfully", {
-      borderRadius: "10px",
-      background: "#333",
-      color: "#fff",
-      // icon: <AiOutlineCheckCircle />,
+    }).then(() => {
+      navigate("/");
     });
   }
 
@@ -63,19 +47,25 @@ export default function NewProject() {
       <div className="w-[35rem] mt-16">
         <menu className="flex items-center justify-end gap-4 my-4">
           <li>
-            <button
-              onClick={handleCancelAddProject}
-              className="text-stone-800 hover:text-stone-950"
-            >
-              Cancel
-            </button>
+            <Link to={"/"}>
+              <button className="text-stone-800 hover:text-stone-950">
+                Cancel
+              </button>
+            </Link>
           </li>
           <li>
             <button
-              className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950"
+              className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950 flex items-center"
               onClick={handleSave}
+              disabled={isLoading}
             >
-              Save
+              {isLoading ? (
+                <>
+                  <BiLoaderCircle className="animate-spin mr-2" /> Saving...
+                </>
+              ) : (
+                "Save"
+              )}
             </button>
           </li>
         </menu>

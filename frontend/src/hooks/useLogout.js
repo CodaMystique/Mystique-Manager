@@ -14,12 +14,19 @@ function useLogout() {
         headers: { "Content-Type": "application/json" },
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 401) {
+        // JWT is expired, remove user from localStorage
         localStorage.removeItem("user");
         setAuthUser(null);
+        toast.error("Session expired. Please log in again.");
+      } else if (response.ok) {
+        // Logout successful
+        localStorage.removeItem("user");
+        setAuthUser(null);
+        toast.success("Logout successful");
       } else {
+        // Other errors
+        const data = await response.json();
         throw new Error(data.error || "Logout failed");
       }
     } catch (error) {

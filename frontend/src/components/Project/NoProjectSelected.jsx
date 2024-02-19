@@ -1,6 +1,7 @@
 import NoProjectImag from "../../assets/no-projects.png";
 import Button from "../Helper/Button.jsx";
 import useProjects from "../../hooks/useProjects";
+import { Link } from "react-router-dom";
 
 export default function NoProjectSelected() {
   const { handleStartAddProject } = useProjects();
@@ -16,10 +17,12 @@ export default function NoProjectSelected() {
         No Project Selected
       </h2>
       <p className="text-stone-400 mb-4">
-        Select a projects or get started with a new one
+        Select a project or get started with a new one
       </p>
       <p className="mt-8">
-        <Button onClick={handleStartAddProject}>Create New Project</Button>
+        <Link to={"/new-project"}>
+          <Button onClick={handleStartAddProject}>Create New Project</Button>
+        </Link>
       </p>
     </div>
   );
