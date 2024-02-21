@@ -6,11 +6,14 @@ import connectToMongoDB from "./db/connectToMongoDB.js";
 import authRoutes from "./routes/auth.routes.js";
 import projectsRoutes from "./routes/projects.routes.js";
 import tasksRoutes from "./routes/tasks.routes.js";
-dotenv.config();
 
 const app = express();
 
+const PORT = process.env.PORT || 5000;
+
 const __dirname = path.resolve();
+
+dotenv.config();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -24,8 +27,6 @@ app.use(express.static(path.join(__dirname, "/frontend/dist")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
-
-const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   connectToMongoDB();
