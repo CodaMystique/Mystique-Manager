@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "https://master--resilient-mermaid-0ffc2c.netlify.app/",
+        target: "http://localhost:5000",
       },
     },
   },
